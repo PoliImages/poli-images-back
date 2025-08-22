@@ -8,6 +8,8 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  cpf_cnpj_validator: ^2.0.0
+  crypt: ^4.3.1
   dotenv: ^4.2.0
   mongo_dart: ^0.10.5
   path: ^1.9.0
