@@ -5,7 +5,7 @@ void main() async {
   // --- ATENÇÃO AQUI ---
   // Cole sua string de conexão COMPLETA e CORRIGIDA dentro das aspas abaixo.
   // Verifique se NÃO há < > ao redor do usuário e senha.
-  var connectionString = "mongodb+srv://carol:carolzinha@poliimages.ijmat38.mongodb.net/poli_images_db?retryWrites=true&w=majority";
+  var connectionString = "mongodb+srv://ferrassini2018:1p4Pmjyp5UpuojdL@poliimages.ijmat38.mongodb.net/?retryWrites=true&w=majority";
 
   Db? db;
   try {
