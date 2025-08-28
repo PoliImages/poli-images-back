@@ -8,46 +8,74 @@ class AuthService {
 
   AuthService(this._db);
 
-  // Método principal para registrar um novo usuário
+  // --- MÉTODO DE LOGIN (NOVO) ---
+  Future<Map<String, dynamic>> loginUser(String body) async {
+    try {
+      final Map<String, dynamic> data = jsonDecode(body);
+      final String? email = data['email'];
+      final String? password = data['password']; // O CPF
+
+      if (email == null || password == null) {
+        return {'status': 400, 'message': 'E-mail e senha são obrigatórios.'};
+      }
+
+      final usersCollection = _db.collection('users');
+      final existingUser = await usersCollection.findOne({'email': email});
+
+      // 1. Verifica se o usuário existe
+      if (existingUser == null) {
+        return {'status': 404, 'message': 'Usuário não encontrado.'};
+      }
+
+      final hashedPassword = existingUser['password'] as String;
+
+      // 2. Compara a senha enviada com a senha no banco
+      if (Crypt(hashedPassword).match(password)) {
+        // Senha correta
+        return {'status': 200, 'message': 'Login bem-sucedido!'};
+      } else {
+        // Senha incorreta
+        return {'status': 401, 'message': 'Senha inválida.'};
+      }
+    } catch (e) {
+      print('Erro interno no login: $e');
+      return {'status': 500, 'message': 'Erro interno no servidor.'};
+    }
+  }
+
+  // Método principal para registrar um novo usuário (EXISTENTE)
   Future<Map<String, dynamic>> registerUser(String body) async {
     try {
       final Map<String, dynamic> data = jsonDecode(body);
       final String? email = data['email'];
       final String? password = data['password']; // Que será o CPF
 
-      // 1. Validação de campos básicos
       if (email == null || password == null) {
         return {'status': 400, 'message': 'E-mail e senha são obrigatórios.'};
       }
 
-      // 2. Validação do formato do e-mail
       final role = _validateEmailAndGetRole(email);
       if (role == null) {
         return {'status': 400, 'message': 'Formato de e-mail inválido.'};
       }
       
-      // 3. Validação do formato do CPF
       if (!CPFValidator.isValid(password)) {
         return {'status': 400, 'message': 'CPF inválido.'};
       }
 
-      // 4. Conectar ao banco e pegar a coleção de usuários
       final usersCollection = _db.collection('users');
 
-      // 5. Verificar se o e-mail já existe
       final existingUser = await usersCollection.findOne({'email': email});
       if (existingUser != null) {
         return {'status': 409, 'message': 'Este e-mail já está em uso.'};
       }
 
-      // 6. Hashing da senha (CPF)
       final hashedPassword = Crypt.sha256(password).toString();
 
-      // 7. Salvar no MongoDB
       await usersCollection.insertOne({
         'email': email,
         'password': hashedPassword,
-        'role': role, // 'teacher' ou 'student'
+        'role': role,
         'createdAt': DateTime.now(),
       });
 
@@ -59,7 +87,7 @@ class AuthService {
     }
   }
 
-  // Função auxiliar para validar o domínio do e-mail e retornar o "papel" do usuário
+  // Função auxiliar para validar o domínio do e-mail (EXISTENTE)
   String? _validateEmailAndGetRole(String email) {
     if (email.endsWith('@sistemapoliedro.com.br')) {
       return 'teacher';
