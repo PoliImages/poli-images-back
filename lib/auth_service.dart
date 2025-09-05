@@ -29,7 +29,7 @@ class AuthService {
 
       final hashedPassword = existingUser['password'] as String;
 
-      // 2. Compara a senha enviada com a senha no banco
+      // 2. Compara a senha enviada com a senha no banco 
       if (Crypt(hashedPassword).match(password)) {
         // Senha correta
         return {'status': 200, 'message': 'Login bem-sucedido!'};
