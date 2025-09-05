@@ -75,7 +75,7 @@ void main() async {
   // 3. Atualiza o handler para usar o Pipeline com o CORS
   final handler = const Pipeline()
       .addMiddleware(corsMiddleware) // Adiciona o porteiro do CORS
-      .addHandler(app);
+      .addHandler(app.call);
 
   final server = await shelf_io.serve(handler, InternetAddress.anyIPv4, 8080);
 
