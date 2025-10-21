@@ -25,3 +25,7 @@ dev_dependencies:
   test: ^1.21.0        # Para escrever e rodar testes
   mockito: ^5.0.17     # Para criar "mocks", ou seja, simular o banco de dados
   mongo_dart: ^0.7.2   # Para usar as classes do mongo (Db, Collection)
+
+dev_dependencies:
+  test: ^1.25.0
+  mockito: ^5.4.4
