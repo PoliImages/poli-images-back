@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
-<<<<<<< HEAD
 import 'package:mockito/annotations.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:crypt/crypt.dart';
@@ -11,7 +10,7 @@ import '../lib/auth_service.dart';
 @GenerateMocks([Db, DbCollection, WriteResult])
 import 'auth_service_test.mocks.dart';
 
-String createBody(String email, String password) => 
+String createBody(String email, String password) =>
     jsonEncode({'email': email, 'password': password});
 
 Map<String, dynamic> _createDbUser(String email, String hashedPassword, String role) {
@@ -25,17 +24,14 @@ Map<String, dynamic> _createDbUser(String email, String hashedPassword, String r
 void main() {
     late MockDb mockDb;
     late MockDbCollection mockCollection;
-    late MockWriteResult mockWriteResult; 
+    late MockWriteResult mockWriteResult;
     
     late AuthService authService;
 
-    // ATENÇÃO: CPFs VÁLIDOS MATEMATICAMENTE (Usando um CPF de teste mais comum)
-    // Se este valor ainda falhar, o pacote está bloqueando CPFs simulados.
-    const String validCpfAluno = '01234567890'; // Exemplo de CPF válido
-    const String validCpfProf = '98765432100'; 
-    const String invalidCpf = '00000000000'; // Este deve falhar na validação estática
+    const String validCpfAluno = '01234567890';
+    const String validCpfProf = '98765432100';
+    const String invalidCpf = '00000000000';
     
-    // HASHES RECALCULADOS E CONSISTENTES (Apenas para simular o DB)
     final String hashedPasswordAluno = Crypt.sha256(validCpfAluno).toString();
     final String hashedPasswordProf = Crypt.sha256(validCpfProf).toString();
 
@@ -48,7 +44,6 @@ void main() {
         
         authService = AuthService(mockDb); 
         
-        // Simulação básica do WriteResult (necessária para insertOne)
         when(mockWriteResult.isSuccess).thenReturn(true);
         when(mockCollection.insertOne(any)).thenAnswer((_) async => mockWriteResult);
     });
@@ -217,7 +212,7 @@ void main() {
         });
 
 
-        // --- CENÁRIO 4: Cadastro com e-mail já cadastrado (Conflito - 409) ---
+        // --- CENÁRIO 4: Cadastro com CPF inválido ---
         test('Cadastro com CPF inválido', () async {
             final body = createBody(studentEmail, invalidCpf);
             
@@ -250,7 +245,7 @@ void main() {
     
         // --- Cenário de Falha: Erro de DB durante a consulta (findOne) ---
         test('Deve retornar status 500 se ocorrer um erro de banco de dados durante a consulta', () async {
-            final body = createBody(studentEmail, validCpfAluno); 
+            final body = createBody(studentEmail, validCpfAluno);
             
             when(mockCollection.findOne(any)).thenThrow(
                 Exception('Falha de conexão simulada.'));
@@ -300,101 +295,3 @@ void main() {
         });
     });
 }
-=======
-import 'package:mongo_dart/mongo_dart.dart';
-import 'package:crypt/crypt.dart';
-import 'package:cpf_cnpj_validator/cpf_validator.dart';
-import 'package:your_package_name/auth_service.dart'; // ajuste para o nome do seu pacote
-
-// --- Mock do MongoDB ---
-class MockDbCollection extends Mock implements DbCollection {}
-class MockDb extends Mock implements Db {}
-
-void main() {
-  late AuthService authService;
-  late MockDb db;
-  late MockDbCollection usersCollection;
-
-  setUp(() {
-    db = MockDb();
-    usersCollection = MockDbCollection();
-    when(db.collection('users')).thenReturn(usersCollection);
-    authService = AuthService(db);
-  });
-
-  group('AuthService.registerUser', () {
-    test('deve retornar erro se e-mail ou senha forem nulos', () async {
-      final body = jsonEncode({'email': null, 'password': null});
-
-      final result = await authService.registerUser(body);
-
-      expect(result['status'], 400);
-      expect(result['message'], contains('E-mail e senha são obrigatórios'));
-    });
-
-    test('deve retornar erro se CPF for inválido', () async {
-      final body = jsonEncode({'email': 'teste@sistemapoliedro.com.br', 'password': '123'});
-
-      final result = await authService.registerUser(body);
-
-      expect(result['status'], 400);
-      expect(result['message'], contains('CPF inválido'));
-    });
-
-    test('deve registrar usuário com sucesso', () async {
-      final cpf = '12345678909';
-      expect(CPFValidator.isValid(cpf), true);
-
-      final body = jsonEncode({'email': 'professor@sistemapoliedro.com.br', 'password': cpf});
-
-      when(usersCollection.findOne(any)).thenAnswer((_) async => null);
-      when(usersCollection.insertOne(any)).thenAnswer((_) async => Future.value());
-
-      final result = await authService.registerUser(body);
-
-      expect(result['status'], 201);
-      expect(result['message'], contains('Usuário criado com sucesso'));
-    });
-  });
-
-  group('AuthService.loginUser', () {
-    test('deve retornar erro se usuário não existir', () async {
-      final body = jsonEncode({'email': 'naoexiste@sistemapoliedro.com.br', 'password': '12345678909'});
-
-      when(usersCollection.findOne(any)).thenAnswer((_) async => null);
-
-      final result = await authService.loginUser(body);
-
-      expect(result['status'], 404);
-      expect(result['message'], contains('Usuário não encontrado'));
-    });
-
-    test('deve retornar erro se senha for incorreta', () async {
-      final hash = Crypt.sha256('12345678909').toString();
-      final existingUser = {'email': 'teste@sistemapoliedro.com.br', 'password': hash};
-
-      when(usersCollection.findOne(any)).thenAnswer((_) async => existingUser);
-
-      final body = jsonEncode({'email': 'teste@sistemapoliedro.com.br', 'password': 'senhaerrada'});
-      final result = await authService.loginUser(body);
-
-      expect(result['status'], 401);
-      expect(result['message'], contains('Senha inválida'));
-    });
-
-    test('deve logar com sucesso se senha for correta', () async {
-      final senha = '12345678909';
-      final hash = Crypt.sha256(senha).toString();
-      final existingUser = {'email': 'teste@sistemapoliedro.com.br', 'password': hash};
-
-      when(usersCollection.findOne(any)).thenAnswer((_) async => existingUser);
-
-      final body = jsonEncode({'email': 'teste@sistemapoliedro.com.br', 'password': senha});
-      final result = await authService.loginUser(body);
-
-      expect(result['status'], 200);
-      expect(result['message'], contains('Login bem-sucedido'));
-    });
-  });
-}
->>>>>>> 8a06e6bf43e8c1167050c87b5aaa2b766c36cd8f
