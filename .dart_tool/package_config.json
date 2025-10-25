@@ -3,15 +3,15 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/_fe_analyzer_shared-85.0.0",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/_fe_analyzer_shared-67.0.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.0"
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/analyzer-7.7.1",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/analyzer-6.4.1",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.0"
     },
     {
       "name": "archive",
@@ -57,15 +57,15 @@
     },
     {
       "name": "build",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build-3.1.0",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build-2.4.1",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "2.19"
     },
     {
       "name": "build_config",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_config-1.2.0",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_config-1.1.2",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.6"
     },
     {
       "name": "build_daemon",
@@ -75,21 +75,21 @@
     },
     {
       "name": "build_resolvers",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_resolvers-3.0.3",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_resolvers-2.4.2",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.0"
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_runner-2.7.1",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_runner-2.4.13",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.5"
     },
     {
       "name": "build_runner_core",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_runner_core-9.3.1",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/build_runner_core-7.3.2",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.5"
     },
     {
       "name": "built_collection",
@@ -171,9 +171,9 @@
     },
     {
       "name": "dart_style",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/dart_style-3.1.1",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/dart_style-2.3.6",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.0"
     },
     {
       "name": "decimal",
@@ -339,9 +339,9 @@
     },
     {
       "name": "mockito",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/mockito-5.5.0",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/mockito-5.4.4",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.1"
     },
     {
       "name": "mongo_dart",
@@ -465,9 +465,9 @@
     },
     {
       "name": "shelf_web_socket",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/shelf_web_socket-3.0.0",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/shelf_web_socket-2.0.1",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "3.3"
     },
     {
       "name": "sky_engine",
@@ -477,9 +477,9 @@
     },
     {
       "name": "source_gen",
-      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/source_gen-3.1.0",
+      "rootUri": "file:///C:/Users/isabe/AppData/Local/Pub/Cache/hosted/pub.dev/source_gen-1.5.0",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.0"
     },
     {
       "name": "source_map_stack_trace",
