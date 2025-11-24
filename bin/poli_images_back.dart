@@ -6,7 +6,6 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:poli_images_back/auth_service.dart';
-// 1. Importa o novo pacote de CORS
 import 'package:shelf_cors_headers/shelf_cors_headers.dart';
 
 void main() async {
@@ -44,7 +43,6 @@ void main() async {
     return Response.ok('API do Poli Images está funcionando!');
   });
 
-  // Rota de Cadastro (EXISTENTE)
   app.post('/api/auth/register', (Request request) async {
     final requestBody = await request.readAsString();
     final result = await authService.registerUser(requestBody);
@@ -56,7 +54,6 @@ void main() async {
     );
   });
 
-  // --- ROTA DE LOGIN (NOVA) ---
   app.post('/api/auth/login', (Request request) async {
     final requestBody = await request.readAsString();
     final result = await authService.loginUser(requestBody);
@@ -68,16 +65,11 @@ void main() async {
     );
   });
 
-  // 2. Cria o "porteiro" (middleware) de CORS
-  // O overrideHeaders com '*' permite requisições de qualquer origem.
   final corsMiddleware = corsHeaders();
-
-  // 3. Atualiza o handler para usar o Pipeline com o CORS
   final handler = const Pipeline()
-      .addMiddleware(corsMiddleware) // Adiciona o porteiro do CORS
+      .addMiddleware(corsMiddleware)
       .addHandler(app.call);
 
   final server = await shelf_io.serve(handler, InternetAddress.anyIPv4, 8080);
-
   print('🚀 Servidor rodando em http://localhost:${server.port}');
 }

@@ -8,12 +8,11 @@ class AuthService {
 
   AuthService(this._db);
 
-  // --- MÉTODO DE LOGIN (NOVO) ---
   Future<Map<String, dynamic>> loginUser(String body) async {
     try {
       final Map<String, dynamic> data = jsonDecode(body);
       final String? email = data['email'];
-      final String? password = data['password']; // O CPF
+      final String? password = data['password'];
 
       if (email == null || password == null) {
         return {'status': 400, 'message': 'E-mail e senha são obrigatórios.'};
@@ -22,19 +21,15 @@ class AuthService {
       final usersCollection = _db.collection('users');
       final existingUser = await usersCollection.findOne({'email': email});
 
-      // 1. Verifica se o usuário existe
       if (existingUser == null) {
         return {'status': 404, 'message': 'Usuário não encontrado.'};
       }
 
       final hashedPassword = existingUser['password'] as String;
 
-      // 2. Compara a senha enviada com a senha no banco 
       if (Crypt(hashedPassword).match(password)) {
-        // Senha correta
         return {'status': 200, 'message': 'Login bem-sucedido!'};
       } else {
-        // Senha incorreta
         return {'status': 401, 'message': 'Senha inválida.'};
       }
     } catch (e) {
@@ -43,12 +38,11 @@ class AuthService {
     }
   }
 
-  // Método principal para registrar um novo usuário (EXISTENTE)
   Future<Map<String, dynamic>> registerUser(String body) async {
     try {
       final Map<String, dynamic> data = jsonDecode(body);
       final String? email = data['email'];
-      final String? password = data['password']; // Que será o CPF
+      final String? password = data['password'];
 
       if (email == null || password == null) {
         return {'status': 400, 'message': 'E-mail e senha são obrigatórios.'};
@@ -87,7 +81,6 @@ class AuthService {
     }
   }
 
-  // Função auxiliar para validar o domínio do e-mail (EXISTENTE)
   String? _validateEmailAndGetRole(String email) {
     if (email.endsWith('@sistemapoliedro.com.br')) {
       return 'teacher';

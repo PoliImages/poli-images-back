@@ -48,11 +48,8 @@ void main() {
         when(mockCollection.insertOne(any)).thenAnswer((_) async => mockWriteResult);
     });
 
-// =================================================================
-// TESTES UNITÁRIOS DE LOGIN
-// =================================================================
+// TESTES DE LOGIN
     group('AuthService - Login Tests', () {
-        // --- CENÁRIO 1: Login de aluno com sucesso ---
         test('Login de aluno com sucesso', () async {
             const email = 'aluno.teste@p4ed.com';
             final userInDb = _createDbUser(email, hashedPasswordAluno, 'student');
@@ -67,7 +64,6 @@ void main() {
             verify(mockCollection.findOne({'email': email})).called(1);
         });
 
-        // --- CENÁRIO 2: Login de professor com sucesso ---
         test('Login de professor com sucesso', () async {
             const email = 'professor.teste@sistemapoliedro.com.br';
             final userInDb = _createDbUser(email, hashedPasswordProf, 'teacher');
@@ -81,7 +77,6 @@ void main() {
             expect(result['message'], 'Login bem-sucedido!');
         });
         
-        // --- CENÁRIO 3: Login com email inválido (Usuário não encontrado) ---
         test('Login com email inválido', () async {
             const email = 'usuario.externo@gmail.com';
             final body = createBody(email, validCpfAluno);
@@ -95,7 +90,6 @@ void main() {
             verify(mockCollection.findOne({'email': email})).called(1);
         });
 
-        // --- CENÁRIO 4: Login com senha inválida ("Senha inválida.") ---
         test('Login com senha inválida', () async {
             const email = 'aluno.teste@p4ed.com';
             const wrongCpf = '00000000000';
@@ -111,7 +105,6 @@ void main() {
         });
 
 
-        // --- Teste de Falha: Dados de entrada ausentes (JSON válido, campos nulos) ---
         test('Deve retornar status 400 quando e-mail ou senha estão faltando', () async {
             final body = jsonEncode({'email': 'aluno@p4ed.com'});
             
@@ -121,9 +114,8 @@ void main() {
             expect(result['message'], 'E-mail e senha são obrigatórios.');
         });
 
-        // --- Teste de Falha: Erro de Deserialização (JSON inválido) ---
         test('Deve retornar status 500 se o corpo for JSON inválido', () async {
-            const invalidBody = '{"email": "incompleto"'; // JSON malformado
+            const invalidBody = '{"email": "incompleto"';
             
             final result = await authService.loginUser(invalidBody);
 
@@ -131,7 +123,6 @@ void main() {
             expect(result['message'], 'Erro interno no servidor.');
         });
         
-        // --- Teste de Falha: Erro interno no servidor (Exceção do DB) ---
         test('Deve retornar status 500 se ocorrer um erro de banco de dados', () async {
             const email = 'aluno.teste@p4ed.com';
             final body = createBody(email, validCpfAluno);
@@ -146,16 +137,13 @@ void main() {
         });
     });
 
-// =================================================================
-// NOVOS TESTES UNITÁRIOS DE REGISTRO
-// =================================================================
+// TESTES DE REGISTRO
     group('AuthService - Register Tests', () {
         
         const String studentEmail = 'novo.aluno@p4ed.com';
         const String teacherEmail = 'novo.prof@sistemapoliedro.com.br';
         const String invalidEmail = 'externo@gmail.com';
 
-        // --- CENÁRIO 1: Cadastro de aluno com sucesso ---
         test('Cadastro de aluno com sucesso', () async {
             const email = studentEmail;
             final body = createBody(studentEmail, validCpfAluno);
@@ -176,7 +164,6 @@ void main() {
             expect(insertedDocument['password'].length, greaterThan(10));
         });
 
-        // --- CENÁRIO 2: Cadastro de professor com sucesso ---
         test('Cadastro de professor com sucesso', () async {
             const email = teacherEmail;
             final body = createBody(teacherEmail, validCpfProf);
@@ -196,8 +183,6 @@ void main() {
             expect(insertedDocument['password'].length, greaterThan(10), reason: 'A senha deve ser uma hash com comprimento adequado.');
         });
 
-
-        // --- CENÁRIO 3: Cadastro com e-mail não institucional (Formato de e-mail inválido) ---
         test('Cadastro com e-mail não institucional', () async {
             const email = invalidEmail;
             final body = createBody(invalidEmail, validCpfAluno);
@@ -211,8 +196,6 @@ void main() {
             verifyNever(mockCollection.insertOne(any));
         });
 
-
-        // --- CENÁRIO 4: Cadastro com CPF inválido ---
         test('Cadastro com CPF inválido', () async {
             final body = createBody(studentEmail, invalidCpf);
             
@@ -225,7 +208,6 @@ void main() {
             verifyNever(mockCollection.insertOne(any));
         });
 
-        // --- CENÁRIO 5: Cadastro com e-mail já cadastrado (Conflito - 409) ---
         test('Cadastro com e-mail já cadastrado ', () async {
             const email = studentEmail;
             final body = createBody(studentEmail, validCpfAluno);
@@ -243,7 +225,6 @@ void main() {
             verifyNever(mockCollection.insertOne(any));
         });
     
-        // --- Cenário de Falha: Erro de DB durante a consulta (findOne) ---
         test('Deve retornar status 500 se ocorrer um erro de banco de dados durante a consulta', () async {
             final body = createBody(studentEmail, validCpfAluno);
             
@@ -257,13 +238,12 @@ void main() {
             verifyNever(mockCollection.insertOne(any));
         });
 
-        // --- Cenário de Falha: Erro de DB durante a inserção (insertOne) ---
         test('Deve retornar status 500 se ocorrer um erro de banco de dados durante a inserção', () async {
             final body = createBody(studentEmail, validCpfAluno);
             
-            when(mockCollection.findOne(any)).thenAnswer((_) async => null); // OK na consulta
+            when(mockCollection.findOne(any)).thenAnswer((_) async => null);
             when(mockCollection.insertOne(any)).thenThrow(
-                Exception('Falha de escrita simulada.')); // Falha na inserção
+                Exception('Falha de escrita simulada.'));
 
             final result = await authService.registerUser(body);
 
@@ -272,7 +252,6 @@ void main() {
             verify(mockCollection.insertOne(any)).called(1);
         });
         
-        // --- Teste de Falha: Dados de entrada ausentes (JSON válido, campos nulos) ---
         test('Deve retornar status 400 quando e-mail ou senha estão faltando', () async {
             final body = jsonEncode({'email': studentEmail});
             
@@ -283,9 +262,8 @@ void main() {
             verifyNever(mockCollection.findOne(any));
         });
 
-        // --- Teste de Falha: Erro de Deserialização (JSON inválido) ---
         test('Deve retornar status 500 se o corpo for JSON inválido', () async {
-            const invalidBody = '{"email": "incompleto"'; // JSON malformado
+            const invalidBody = '{"email": "incompleto"';
             
             final result = await authService.registerUser(invalidBody);
 
